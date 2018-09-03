@@ -1,0 +1,70 @@
+﻿@using PruebaIdeaware2018.Models
+@model HomeClientViewModel
+
+@{
+    ViewBag.Title = "ListAdmin";
+    var grid = new WebGrid(canPage: true, rowsPerPage: 5);
+    grid.Bind(source: Model.MascotasModel.ToGrid, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+}
+
+<div class="container">
+    <h2>Información clientes-mascotas</h2>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">Filtrar: </a>
+            </div>
+            <div class="collapse navbar-collapse">
+                @using (Html.BeginForm("ListAdmin", "Mascotas", FormMethod.Get, new { @class = "navbar-form navbar-left" }))
+                {
+                <div class="form-group">
+                    @Html.DropDownList("TiendaId", null, "Todos", htmlAttributes: new { @class = "form-control", onchange = "this.form.submit()" })
+                </div>
+                }
+            </div>
+        </div>
+    </nav>
+    <div>
+        @grid.Table(
+           tableStyle: "table table-responsive table-bordered",
+           columns: grid.Columns(
+               grid.Column(columnName: "Cliente.Cedula", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Cliente.Cedula).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Cliente.Cedula)),
+               grid.Column(columnName: "Cliente.Nombre", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Cliente).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Cliente.Nombre)),
+               grid.Column(columnName: "Cliente.Tienda.Nombre", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Cliente.Tienda).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Cliente.Tienda.Nombre)),
+               grid.Column(columnName: "Apodo", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Apodo).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Apodo)),
+               grid.Column(columnName: "TodayTasksCount", header: Html.DisplayNameFor(modelName => Model.MascotasModel.TodayTasksCount).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).TodayTasksCount))
+           )
+        )
+
+        <div class="row">
+            <div class="col-sm-6">
+                @grid.PagerList(mode: WebGridPagerModes.All, paginationStyle: "pagination pagination-small pagination-right")
+            </div>
+        </div>
+        @Html.Hidden("dir", grid.SortDirection)
+        @Html.Hidden("col", grid.SortColumn)
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            try {
+                var dir = $('#dir').val();
+                var col = $('#col').val();
+                if (col.length > 0) {
+                    var header = $("th a[href*='sort\=" + col + "']");
+                    if (dir == "Ascending") {
+                        header.text(header.text() + "  ▲")
+                    }
+                    if (dir == "Descending") {
+                        header.text(header.text() + "  ▼");
+                    }
+                }
+            } catch (e) {
+
+            }
+        });
+    </script>
+}
+

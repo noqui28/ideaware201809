@@ -1,0 +1,42 @@
+﻿@model PruebaIdeaware2018.Domain.TareasMascota
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TareasMascota</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Mascota)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mascota.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tarea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tarea.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_ejec)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_ejec)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

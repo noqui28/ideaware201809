@@ -1,0 +1,126 @@
+﻿@using PruebaIdeaware2018.Models
+@model HomeClientViewModel
+
+@{
+    ViewBag.Title = "HomeClient";
+    var grid = new WebGrid(canPage: true, rowsPerPage: 5);
+    grid.Bind(source: Model.MascotasModel.ToGrid, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+@*<h2>Bienvenido!</h2>
+
+<div>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Cedula)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Cedula)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Nombre)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Nombre)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.PhoneNumber)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.PhoneNumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Tienda)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Tienda.Nombre)
+            </dd>
+
+        </dl>
+    </div>
+</div>
+    *@
+<div class="container">
+    <h2>Mis mascotas (@Html.DisplayNameFor(modelName => Model.TotalPagarHoy) = @Html.DisplayFor(modelItem => Model.TotalPagarHoy))</h2>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">Buscar</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                @using (Html.BeginForm("HomeClient", "Home", FormMethod.Get, new { @class = "navbar-form navbar-left" }))
+                {
+                    <div class="form-group">
+                        <input id="search" type="text" name="search" value="@ViewBag.search" class="form-control" placeholder="nombre de tarea" />
+                        Numero de tareas
+                        @Html.DropDownList("searchoperator", new List<SelectListItem>
+                        {
+                                new SelectListItem() {Text = "=", Value="igual"},
+                                new SelectListItem() {Text = "<", Value="menor"},
+                                new SelectListItem() {Text = "<=", Value="menorigual"},
+                                new SelectListItem() {Text = ">", Value="mayor"},
+                                new SelectListItem() {Text = ">=", Value="mayorigual"}
+                        })
+                        <input id="numtareas" type="number" name="numtareas" value="@ViewBag.numtareas" class="form-control" placeholder="" />
+                    </div>
+                    <button type="submit" value="Search" class="btn btn-success">Buscar</button>
+                }
+            </div>
+        </div>
+    </nav>
+    <div>
+        @grid.Table(
+           tableStyle: "table table-responsive table-bordered",
+           columns: grid.Columns(
+               grid.Column(columnName: "Nombre", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Nombre).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Nombre)),
+               grid.Column(columnName: "Apodo", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Apodo).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Apodo)),
+               grid.Column(columnName: "TotalPay", header: Html.DisplayNameFor(modelName => Model.MascotasModel.TotalPay).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).TotalPay)),
+               grid.Column(columnName: "NearDateTask", header: Html.DisplayNameFor(modelName => Model.MascotasModel.NearDateTask).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).NearDateTask)),
+               grid.Column(columnName: "TodayTasksCount", header: Html.DisplayNameFor(modelName => Model.MascotasModel.TodayTasksCount).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).TodayTasksCount)),
+               grid.Column(columnName: "PercentageTasksDone", header: Html.DisplayNameFor(modelName => Model.MascotasModel.PercentageTasksDone).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).PercentageTasksDone)),
+               grid.Column(columnName: "Raza.Nombre", header: Html.DisplayNameFor(modelName => Model.MascotasModel.Raza).ToString(), format: (item) => @Html.DisplayFor(modelItem => ((item as WebGridRow).Value as MascotaViewModel).Raza.Nombre))
+           )
+        )
+
+        <div class="row">
+            <div class="col-sm-6">
+                @grid.PagerList(mode: WebGridPagerModes.All, paginationStyle: "pagination pagination-small pagination-right")
+            </div>
+        </div>
+        @Html.Hidden("dir", grid.SortDirection)
+        @Html.Hidden("col", grid.SortColumn)
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            try {
+                var dir = $('#dir').val();
+                var col = $('#col').val();
+                if (col.length > 0) {
+                    var header = $("th a[href*='sort\=" + col + "']");
+                    if (dir == "Ascending") {
+                        header.text(header.text() + "  ▲")
+                    }
+                    if (dir == "Descending") {
+                        header.text(header.text() + "  ▼");
+                    }
+                }
+            } catch (e) {
+
+            }
+        });
+    </script>
+}

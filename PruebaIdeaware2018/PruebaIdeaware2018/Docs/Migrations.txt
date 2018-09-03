@@ -1,0 +1,57 @@
+﻿======================================== PruebaContext ====================================================
+
+Enable-Migrations -ContextTypeName PruebaContext -MigrationsDirectory Migrations\Data
+
+add-migration -ConfigurationTypeName PruebaIdeaware2018.Migrations.Data.Configuration "InitialCreate"
+
+update-database -ConfigurationTypeName PruebaIdeaware2018.Migrations.Data.Configuration
+
+
+add-migration SeedOnly
+update-database -TargetMigration SeedOnly
+
+======================================== ApplicationDbContext ====================================================
+
+Enable-Migrations -ContextTypeName ApplicationDbContext -MigrationsDirectory Migrations\Identity
+
+add-migration -ConfigurationTypeName PruebaIdeaware2018.Migrations.Data.Configuration "InitialCreate"
+
+update-database -ConfigurationTypeName PruebaIdeaware2018.Migrations.Data.Configuration
+
+
+==================================================================================================================
+
+
+PM> sqllocaldb.exe stop v11.0
+LocalDB instance "v11.0" stopped.
+
+PM> 
+PM> sqllocaldb.exe delete v11.0
+LocalDB instance "v11.0" deleted.
+
+PM> sqllocaldb.exe start v11.0
+LocalDB instance "v11.0" started.
+
+
+
+
+
+Query para una consulta muchos a muchos, los comentarios de smith
+var commentsOfMembers = context.Members
+    .Where(m => m.LastName == "Smith")
+    .SelectMany(m => m.MemberComments.Select(mc => mc.Comment))
+    .ToList();
+
+var commentsOfMembers = context.MemberComments
+    .Where(mc => mc.Member.LastName == "Smith")
+    .Select(mc => mc.Comment)
+    .ToList();
+
+var membersWithComments = context.Members
+    .Where(m => m.LastName == "Smith")
+    .Select(m => new
+    {
+        Member = m,
+        Comments = m.MemberComments.Select(mc => mc.Comment)
+    })
+    .ToList();
